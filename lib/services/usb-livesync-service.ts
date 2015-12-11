@@ -306,9 +306,9 @@ export class AndroidUsbLiveSyncService extends androidLiveSyncServiceLib.Android
 	public sendPageReloadMessageToDevice(deviceAppData: Mobile.IDeviceAppData): IFuture<void> {
 		return (() => {
 			this.device.adb.executeCommand(["forward", `tcp:${AndroidUsbLiveSyncService.BACKEND_PORT.toString()}`, `localabstract:${deviceAppData.appIdentifier}-livesync`]).wait();
-
-
+			console.log("BEFORE SEND PAGE RELOAD!!!");
 			this.sendPageReloadMessage().wait();
+			console.log("AFTER SEND PAGE RELOAD!!!");
 
 		}).future<void>()();
 	}
@@ -332,23 +332,28 @@ export class AndroidUsbLiveSyncService extends androidLiveSyncServiceLib.Android
 		let future = new Future<void>();
 
 		let socket = new net.Socket();
+		console.log("BEFORE ERROR EVENT!!!");
 		socket.on("error", (err: any, data: any) => {  //this gets called now on error
 			console.log("on error");
 			console.log("SOCKET ERRROR!!!!! ", err);
 			future.throw(new Error(err));
 		});
 
+		console.log("BEFORE DATA EVENT!!!");
 		socket.on("data", (data: any) => { //this gets called every time with (1) on every successfull call to runtime
 			console.log("on data");
 			console.log("SOCKET DATA !!!! ", data);
 			future.return(data);
 		});
-		
+
+		console.log("BEFORE CONNECT");
 		socket.connect(AndroidUsbLiveSyncService.BACKEND_PORT, '127.0.0.1', () => { //when trying to connect to error activity, this blows up
 			console.log("on connect");
 			socket.write(new Buffer([0, 0, 0, 1, 1]));
+			console.log("AFTER SOCKET WRITE!!!!");
 		});
 
+		console.log("BEFORE RETURN FUTURE!!!");
 		return future;
 	}
 }
