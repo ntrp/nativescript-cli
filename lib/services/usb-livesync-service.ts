@@ -307,32 +307,8 @@ export class AndroidUsbLiveSyncService extends androidLiveSyncServiceLib.Android
 		return (() => {
 			this.device.adb.executeCommand(["forward", `tcp:${AndroidUsbLiveSyncService.BACKEND_PORT.toString()}`, `localabstract:${deviceAppData.appIdentifier}-livesync`]).wait();
 
-			let socket = new net.Socket();
-			socket.on("error", (err: any, data: any) => {
-				console.log("SOCKET ERRROR!!!!! ", err);
-				if (err && err.code !== "EISCONN") {
-					socket.destroy();
-					//future.throw(new Error(err));
-				}
-			});
 
-			socket.on("data", (err: any, data: any) => {
-				console.log("SOCKET ERROR !!!! ", err);
-				console.log("SOCKET DATA!!!!! ", data);
-				// future.return(data);
-			});
-
-			socket.on("end", (err: any, data: any) => {
-				console.log("SOCKET END!!!!!!!");
-				console.log("SOCKET ERROR !!!! ", err);
-				console.log("SOCKET DATA!!!!! ", data);
-			});
-
-			socket.on("timeout", () => {
-				console.log("SOCKET TIMEOUT!!!!!!! ");
-			});
-
-			this.sendPageReloadMessage(socket).wait();
+			this.sendPageReloadMessage().wait();
 
 		}).future<void>()();
 	}
@@ -352,12 +328,25 @@ export class AndroidUsbLiveSyncService extends androidLiveSyncServiceLib.Android
 		return `/data/local/tmp/${appIdentifier}`;
 	}
 
-	private sendPageReloadMessage(socket: any): IFuture<void> {
+	private sendPageReloadMessage(): IFuture<void> {
 		let future = new Future<void>();
 
-		socket.connect(AndroidUsbLiveSyncService.BACKEND_PORT, '127.0.0.1', () => {
+		let socket = new net.Socket();
+		socket.on("error", (err: any, data: any) => {  //this gets called now on error
+			console.log("on error");
+			console.log("SOCKET ERRROR!!!!! ", err);
+			future.throw(new Error(err));
+		});
+
+		socket.on("data", (data: any) => { //this gets called every time with (1) on every successfull call to runtime
+			console.log("on data");
+			console.log("SOCKET DATA !!!! ", data);
+			future.return(data);
+		});
+		
+		socket.connect(AndroidUsbLiveSyncService.BACKEND_PORT, '127.0.0.1', () => { //when trying to connect to error activity, this blows up
+			console.log("on connect");
 			socket.write(new Buffer([0, 0, 0, 1, 1]));
-			future.return();
 		});
 
 		return future;
