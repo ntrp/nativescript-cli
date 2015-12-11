@@ -329,10 +329,11 @@ export class AndroidUsbLiveSyncService extends androidLiveSyncServiceLib.Android
 	}
 
 	private sendPageReloadMessage(): IFuture<void> {
+		console.log("INSIDE sendPageReloadMessage function");
 		let future = new Future<void>();
-
+		console.log("AFTER FUTURE CREATION AND BEFORE SOCKET CREATION!!!");
 		let socket = new net.Socket();
-		console.log("BEFORE ERROR EVENT!!!");
+		console.log("BEFORE ERROR EVENT AND AFTER SOCKET CREATION!!!");
 		socket.on("error", (err: any, data: any) => {  //this gets called now on error
 			console.log("on error");
 			console.log("SOCKET ERRROR!!!!! ", err);
