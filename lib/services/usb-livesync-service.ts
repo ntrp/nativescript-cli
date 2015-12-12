@@ -347,7 +347,6 @@ export class AndroidUsbLiveSyncService extends androidLiveSyncServiceLib.Android
 		//console.log("BEFORE DATA EVENT!!!");
 		socket.on("data", (data: any) => { //this gets called every time with (1) on every successfull call to runtime
 			console.log("on data");
-			console.log("SOCKET DATA !!!! ", data);
 			future.return(data);
 		});
 
@@ -355,7 +354,6 @@ export class AndroidUsbLiveSyncService extends androidLiveSyncServiceLib.Android
 		socket.connect(AndroidUsbLiveSyncService.BACKEND_PORT, '127.0.0.1', () => { //when trying to connect to error activity, this blows up
 			console.log("on connect");
 			socket.write(new Buffer([0, 0, 0, 1, 1]));
-			console.log("AFTER SOCKET WRITE!!!!");
 		});
 
 		setTimeout(() => {
@@ -367,7 +365,6 @@ export class AndroidUsbLiveSyncService extends androidLiveSyncServiceLib.Android
 			}
 		}, 1000);
 
-		console.log("BEFORE RETURN FUTURE!!!");
 		return future;
 	}
 }
