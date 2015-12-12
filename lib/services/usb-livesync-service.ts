@@ -10,6 +10,7 @@ import * as net from "net";
 import Future = require("fibers/future");
 import * as helpers from "../common/helpers";
 import * as moment from "moment";
+import * as fiberBootstrap from "../common/fiber-bootstrap";
 
 export class UsbLiveSyncService extends usbLivesyncServiceBaseLib.UsbLiveSyncServiceBase implements IUsbLiveSyncService {
 
@@ -329,32 +330,42 @@ export class AndroidUsbLiveSyncService extends androidLiveSyncServiceLib.Android
 	}
 
 	private sendPageReloadMessage(deviceAppData: Mobile.IDeviceAppData): IFuture<void> {
-		console.log("INSIDE sendPageReloadMessage function");
+		//console.log("INSIDE sendPageReloadMessage function");
 		let future = new Future<void>();
-		console.log("AFTER FUTURE CREATION AND BEFORE SOCKET CREATION!!!");
+		//console.log("AFTER FUTURE CREATION AND BEFORE SOCKET CREATION!!!");
 		let socket = new net.Socket();
-		console.log("BEFORE ERROR EVENT AND AFTER SOCKET CREATION!!!");
+		//console.log("BEFORE ERROR EVENT AND AFTER SOCKET CREATION!!!");
 		socket.on("error", (err: any, data: any) => {  //this gets called now on error
 			console.log("on error");
 			console.log("SOCKET ERRROR!!!!! ", err);
-			this.device.applicationManager.restartApplication(deviceAppData.appIdentifier);
+			fiberBootstrap.run(() => {
+				this.device.applicationManager.restartApplication(deviceAppData.appIdentifier).wait();
+			});
 			future.return();
-			// future.throw(new Error(err));
 		});
 
-		console.log("BEFORE DATA EVENT!!!");
+		//console.log("BEFORE DATA EVENT!!!");
 		socket.on("data", (data: any) => { //this gets called every time with (1) on every successfull call to runtime
 			console.log("on data");
 			console.log("SOCKET DATA !!!! ", data);
 			future.return(data);
 		});
 
-		console.log("BEFORE CONNECT");
+		//console.log("BEFORE CONNECT");
 		socket.connect(AndroidUsbLiveSyncService.BACKEND_PORT, '127.0.0.1', () => { //when trying to connect to error activity, this blows up
 			console.log("on connect");
 			socket.write(new Buffer([0, 0, 0, 1, 1]));
 			console.log("AFTER SOCKET WRITE!!!!");
 		});
+
+		setTimeout(() => {
+			if (!future.isResolved()) {
+				fiberBootstrap.run(() => {
+					this.device.applicationManager.restartApplication(deviceAppData.appIdentifier).wait();
+				});
+				future.return();
+			}
+		}, 1000);
 
 		console.log("BEFORE RETURN FUTURE!!!");
 		return future;
