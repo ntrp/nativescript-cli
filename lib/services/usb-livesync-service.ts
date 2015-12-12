@@ -307,7 +307,7 @@ export class AndroidUsbLiveSyncService extends androidLiveSyncServiceLib.Android
 		return (() => {
 			this.device.adb.executeCommand(["forward", `tcp:${AndroidUsbLiveSyncService.BACKEND_PORT.toString()}`, `localabstract:${deviceAppData.appIdentifier}-livesync`]).wait();
 			console.log("BEFORE SEND PAGE RELOAD!!!");
-			this.sendPageReloadMessage().wait();
+			this.sendPageReloadMessage(deviceAppData).wait();
 			console.log("AFTER SEND PAGE RELOAD!!!");
 
 		}).future<void>()();
@@ -328,7 +328,7 @@ export class AndroidUsbLiveSyncService extends androidLiveSyncServiceLib.Android
 		return `/data/local/tmp/${appIdentifier}`;
 	}
 
-	private sendPageReloadMessage(): IFuture<void> {
+	private sendPageReloadMessage(deviceAppData: Mobile.IDeviceAppData): IFuture<void> {
 		console.log("INSIDE sendPageReloadMessage function");
 		let future = new Future<void>();
 		console.log("AFTER FUTURE CREATION AND BEFORE SOCKET CREATION!!!");
@@ -337,7 +337,9 @@ export class AndroidUsbLiveSyncService extends androidLiveSyncServiceLib.Android
 		socket.on("error", (err: any, data: any) => {  //this gets called now on error
 			console.log("on error");
 			console.log("SOCKET ERRROR!!!!! ", err);
-			future.throw(new Error(err));
+			this.device.applicationManager.restartApplication(deviceAppData.appIdentifier);
+			future.return();
+			// future.throw(new Error(err));
 		});
 
 		console.log("BEFORE DATA EVENT!!!");
