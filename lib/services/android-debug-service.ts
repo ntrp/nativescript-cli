@@ -94,12 +94,9 @@ class AndroidDebugService implements IDebugService {
 		return (() => {
 			let packageFile = "";
 
-			if(!this.$options.debugBrk && !this.$options.start && !this.$options.getPort && !this.$options.stop) {
-				this.$logger.warn("Neither --debug-brk nor --start option was specified. Defaulting to --debug-brk.");
-				this.$options.debugBrk = true;
-			}
+			let debugBrk = !this.$options.start && !this.$options.getPort && !this.$options.stop;
 
-			if (this.$options.debugBrk && !this.$options.emulator) {
+			if (debugBrk && !this.$options.emulator) {
 				let cachedDeviceOption = this.$options.forDevice;
 				this.$options.forDevice = true;
 				this.$platformService.buildPlatform(this.platform).wait();
@@ -127,7 +124,7 @@ class AndroidDebugService implements IDebugService {
 				this.attachDebugger(device.deviceInfo.identifier, packageName).wait();
 			} else if (this.$options.stop) {
 				this.detachDebugger(packageName).wait();
-			} else if (this.$options.debugBrk) {
+			} else {
 				this.startAppWithDebugger(packageFile, packageName).wait();
 			}
 		}).future<void>()();

@@ -37,6 +37,8 @@ class TestExecutionService implements ITestExecutionService {
 		private $errors: IErrors) {
 	}
 
+    private debugBrk: boolean;
+
 	public startTestRunner(platform: string) : IFuture<void> {
 		return (() => {
 			this.$options.justlaunch = true;
@@ -50,7 +52,7 @@ class TestExecutionService implements ITestExecutionService {
 						let projectFilesPath = path.join(platformData.appDestinationDirectoryPath, constants.APP_FOLDER_NAME);
 
 						let configOptions: IKarmaConfigOptions = JSON.parse(launcherConfig);
-						this.$options.debugBrk = configOptions.debugBrk;
+						this.debugBrk = configOptions.debugBrk;
 						this.$options.debugTransport = configOptions.debugTransport;
 						let configJs = this.generateConfig(configOptions);
 						this.$fs.writeFile(path.join(projectDir, TestExecutionService.CONFIG_FILE_NAME), configJs).wait();
@@ -119,13 +121,13 @@ class TestExecutionService implements ITestExecutionService {
 							getApplicationPathForiOSSimulatorAction: getApplicationPathForiOSSimulatorAction,
 							localProjectRootPath: localProjectRootPath,
 							beforeBatchLiveSyncAction: beforeBatchLiveSyncAction,
-							shouldRestartApplication: (localToDevicePaths: Mobile.ILocalToDevicePathData[]) => Future.fromResult(!this.$options.debugBrk),
+							shouldRestartApplication: (localToDevicePaths: Mobile.ILocalToDevicePathData[]) => Future.fromResult(!this.debugBrk),
 							canExecuteFastLiveSync: (filePath: string) => false,
 						};
 
 						this.$usbLiveSyncServiceBase.sync(liveSyncData).wait();
 
-						if (this.$options.debugBrk) {
+						if (this.debugBrk) {
 							this.$logger.info('Starting debugger...');
 							let debugService: IDebugService = this.$injector.resolve(`${platform}DebugService`);
 							debugService.debugStart().wait();
@@ -163,7 +165,7 @@ class TestExecutionService implements ITestExecutionService {
 					node: process.execPath,
 					options: {
 						debugTransport: this.$options.debugTransport,
-						debugBrk: this.$options.debugBrk,
+						debugBrk: this.debugBrk,
 					}
 				},
 			};
@@ -173,7 +175,7 @@ class TestExecutionService implements ITestExecutionService {
 			if (!this.$options.watch) {
 				karmaConfig.singleRun = true;
 			}
-			if (this.$options.debugBrk) {
+			if (this.debugBrk) {
 				karmaConfig.browserNoActivityTimeout = 1000000000;
 			}
 			this.$logger.debug(JSON.stringify(karmaConfig, null, 4));

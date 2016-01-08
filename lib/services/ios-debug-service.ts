@@ -37,26 +37,17 @@ class IOSDebugService implements IDebugService {
     }
 
     public debug(): IFuture<void> {
-        if (this.$options.debugBrk && this.$options.start) {
-            this.$errors.failWithoutHelp("Expected exactly one of the --debug-brk or --start options.");
-        }
-
-        if(!this.$options.debugBrk && !this.$options.start) {
-            this.$logger.warn("Neither --debug-brk nor --start option was specified. Defaulting to --debug-brk.");
-            this.$options.debugBrk = true;
-        }
-
         if (this.$options.emulator) {
-            if (this.$options.debugBrk) {
-                return this.emulatorDebugBrk();
-            } else if (this.$options.start) {
+            if (this.$options.start) {
                 return this.emulatorStart();
+            } else {
+                return this.emulatorDebugBrk();
             }
         } else {
-            if (this.$options.debugBrk) {
-                return this.deviceDebugBrk();
-            } else if (this.$options.start) {
+            if (this.$options.start) {
                 return this.deviceStart();
+            } else {
+                return this.deviceDebugBrk();
             }
         }
 

@@ -3,20 +3,19 @@ debug ios
 
 Usage | Synopsis
 ---|---
-Deploy on device, run the app and stop at the first breakpoint | `$ tns debug ios --debug-brk [--device <Device ID>] [--no-client]`
-Deploy in the iOS Simulator, run the app and stop at the first breakpoint | `$ tns debug ios --debug-brk --emulator [<Emulator Options>] [--no-client]`
+Deploy on device, run the app and stop at the first breakpoint | `$ tns debug ios [--device <Device ID>] [--no-client]`
+Deploy in the iOS Simulator, run the app and stop at the first breakpoint | `$ tns debug ios --emulator [<Emulator Options>] [--no-client]`
 Attach the debug tools to a running app on device | `$ tns debug ios --start [--device <Device ID>] [--no-client]`
 Attach the debug tools to a running app in the iOS Simulator | `$ tns debug ios --start --emulator [<Emulator Options>] [--no-client]`
 
-Debugs your project on a connected device or in the iOS Simulator. <% if(isHtml) { %>Any debugging traffic is forwarded on port 8080 from the device to the local machine.<% } %> 
+Debugs your project on a connected device or in the iOS Simulator. <% if(isHtml) { %>Any debugging traffic is forwarded on port 8080 from the device to the local machine.<% } %>
 
-<% if(isConsole && (isWindows || isLinux)) { %>WARNING: You can run this command only on OS X systems. To view the complete help for this command, run `$ tns help debug ios`<% } %> 
+<% if(isConsole && (isWindows || isLinux)) { %>WARNING: You can run this command only on OS X systems. To view the complete help for this command, run `$ tns help debug ios`<% } %>
 
 <% if((isConsole && isMacOS) || isHtml) { %>
 <% if(isHtml) { %>> <% } %>IMPORTANT: Before building for iOS device, verify that you have configured a valid pair of certificate and provisioning profile on your OS X system. <% if(isHtml) { %>For more information, see [Obtaining Signing Identities and Downloading Provisioning Profiles](https://developer.apple.com/library/mac/recipes/xcode_help-accounts_preferences/articles/obtain_certificates_and_provisioning_profiles.html).<% } %>
 
 ### Options
-* `--debug-brk` - Prepares, builds and deploys the application package on a device or in an emulator, runs the app, launches the developer tools of your Safari browser and stops at the first breakpoint.
 * `--start` - Attaches the debug tools to a deployed and running app and launches the developer tools of your Safari browser.
 * `--emulator` - Indicates that you want to debug your app in the iOS simulator.
 * `--no-client` - If set, the NativeScript CLI attaches the debug tools but does not launch the developer tools in Safari.
@@ -25,8 +24,8 @@ Debugs your project on a connected device or in the iOS Simulator. <% if(isHtml)
 ### Attributes
 * `<Device ID>` is the index or name of the target device as listed by `$ tns device`
 * `<Emulator Options>` is any valid combination of options as listed by `$ tns help emulate ios`
-<% } %> 
-<% if(isHtml) { %> 
+<% } %>
+<% if(isHtml) { %>
 ### Prerequisite
 
 * If you want to debug in the iOS Simulator, you must have Xcode 6 or later installed on your system.
@@ -55,6 +54,6 @@ Command | Description
 [run ios](run-ios.html) | Runs your project on a connected iOS device or in the iOS Simulator, if configured.
 [run](run.html) | Runs your project on a connected device or in the native emulator for the selected platform.
 [test init](test-init.html) | Configures your project for unit testing with a selected framework.
-[test android](test-android.html) | Runs the tests in your project on Android devices or native emulators. 
+[test android](test-android.html) | Runs the tests in your project on Android devices or native emulators.
 [test ios](test-ios.html) | Runs the tests in your project on iOS devices or the iOS Simulator.
 <% } %>

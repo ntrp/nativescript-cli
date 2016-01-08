@@ -3,9 +3,9 @@ debug android
 
 Usage | Synopsis
 ---|---
-Deploy on device, run the app and stop at the first breakpoint | `$ tns debug android --debug-brk [--device <Device ID>] [--debug-port <port>] [--timeout <timeout>]`
-Deploy in the native emulator, run the app and stop at the first breakpoint | `$ tns debug android --debug-brk --emulator [<Emulator Options>] [--timeout <timeout>]`
-Deploy in Genymotion, run the app and stop at the first breakpoint | `$ tns debug android --debug-brk --geny <Geny Name> [--timeout <timeout>]`
+Deploy on device, run the app and stop at the first breakpoint | `$ tns debug android [--device <Device ID>] [--debug-port <port>] [--timeout <timeout>]`
+Deploy in the native emulator, run the app and stop at the first breakpoint | `$ tns debug android --emulator [<Emulator Options>] [--timeout <timeout>]`
+Deploy in Genymotion, run the app and stop at the first breakpoint | `$ tns debug android --geny <Geny Name> [--timeout <timeout>]`
 Attach the debug tools to a running app on device | `$ tns debug android --start [--device <Device ID>] [--debug-port <port>] [--timeout <timeout>]`
 Attach the debug tools to a running app in the native emulator | `$ tns debug android --start --emulator [<Emulator Options>] [--timeout <timeout>]`
 Attach the debug tools to a running app in Genymotion | `$ tns debug android --start --geny <Geny Name> [--print-app-output] [--timeout <timeout>]`
@@ -18,7 +18,6 @@ Debugs your project on a connected device, in a native emulator or in Genymotion
 * `--device` - Specifies a connected device on which to debug the app.
 * `--emulator` - Specifies that you want to debug the app in the native Android emulator from the Android SDK.
 * `--geny` - Specifies a Genymotion emulator on which you want to debug your app.
-* `--debug-brk` - Prepares, builds and deploys the application package on a device or in an emulator, launches the Chrome DevTools of your Chrome browser. 
 * `--start` - Attaches the debug tools to a deployed and running app.
 * `--stop` - Detaches the debug tools.
 * `--get-port` - Retrieves the port on which you are debugging your application.
@@ -26,11 +25,11 @@ Debugs your project on a connected device, in a native emulator or in Genymotion
 * `--timeout` - Sets the number of seconds that the NativeScript CLI will wait for the debugger to boot. If not set, the default timeout is 90 seconds.
 
 ### Attributes
-* `<Device ID>` is the index or name of the target device as listed by `$ tns device` 
+* `<Device ID>` is the index or name of the target device as listed by `$ tns device`
 * `<Port>` is an accessible port on the device to which you want to attach the debugging tools.
 * `<Emulator Options>` is any valid combination of options as listed by `$ tns help emulate android`
 * `<GenyName>` is the name of the Genymotion virtual device that you want to use as listed by `$ genyshell -c "devices list"`
- 
+
 <% if(isHtml) { %>
 ###Prerequisites
 
@@ -56,6 +55,6 @@ Command | Description
 [run ios](run-ios.html) | Runs your project on a connected iOS device or in the iOS Simulator, if configured.
 [run](run.html) | Runs your project on a connected device or in the native emulator for the selected platform.
 [test init](test-init.html) | Configures your project for unit testing with a selected framework.
-[test android](test-android.html) | Runs the tests in your project on Android devices or native emulators. 
+[test android](test-android.html) | Runs the tests in your project on Android devices or native emulators.
 [test ios](test-ios.html) | Runs the tests in your project on iOS devices or the iOS Simulator.
 <% } %>
